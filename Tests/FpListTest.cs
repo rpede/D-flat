@@ -1,7 +1,7 @@
 using Playground;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
-
+using System;
 
 namespace Tests;
 
@@ -11,7 +11,7 @@ public class FpListTest
     [TestMethod]
     public void Deconstruction()
     {
-        var (head, tail) = FpList<string>.Create("B") + "A";
+        var (head, tail) = new FpList<string>("B", null) + "A";
         Assert.AreEqual(head, "A");
         AssertAreEqual(new[] { "B" }, tail);
     }
@@ -19,7 +19,7 @@ public class FpListTest
     [TestMethod]
     public void Enumerating()
     {
-        var test = FpList<string>.Create("A") + ("B") + ("C");
+        var test = new FpList<string>("A", null) + ("B") + ("C");
         AssertAreEqual(new[] { "C", "B", "A" }, test);
     }
 
@@ -31,10 +31,10 @@ public class FpListTest
     }
 
     [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException))]
     public void EmptyCollectionInitialization()
     {
-        var test = new FpList<string> { };
-        AssertAreEqual(new string[0], test);
+        (new FpList<string>.Builder { }).Build();
     }
 
     private void AssertAreEqual<T>(T[] array, FpList<T> list)
